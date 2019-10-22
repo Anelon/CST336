@@ -4,8 +4,11 @@ then
    echo $testDir
    typeName=${testDir##*/}
    dirName=${PWD##*/}
+   prefix="$typeName/$dirName"
    echo $typeName
    echo $dirName
+   echo $prefix
+
    cd ../..
    cd "./$typeName/$dirName"
 else
