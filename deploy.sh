@@ -8,7 +8,7 @@ then
    typeName=${testDir##*/}
    labName=${PWD##*/}
 
-   git subtree split -b $dirname -P "$typeName/$labName"
+   git subtree split -b $dirname -P $typeName/$labName
    git push origin lab1
 else
    echo "Please enter a commit message"
