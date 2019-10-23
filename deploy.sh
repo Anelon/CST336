@@ -15,7 +15,7 @@ then
 
    #subtree needs to be ran from the base git folder
    cd ../.. 
-   git subtree split -b $dirname -P $prefix
+   git subtree split -b $dirname --prefix="$prefix"
    git push origin $dirname
 else
    echo "Please enter a commit message"
