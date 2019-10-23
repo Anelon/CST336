@@ -1,4 +1,8 @@
-if [ $1 ]
+#!/bin/sh
+
+read -p 'Commit message: ' foo
+echo $foo
+if [ ! -z "$foo" ]
 then
    testDir=$(dirname $PWD)
    echo $testDir

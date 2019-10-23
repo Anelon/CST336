@@ -1,7 +1,11 @@
-if [ $1 ]
+#!/bin/sh
+
+read -p 'Commit message: ' commit
+#echo $commit
+if [ ! -z "$commit" ]
 then
    git add "/Volumes/HDD/Programing/CSUMB/CST336/classGit/."
-   git commit -m "$1"
+   git commit -m "$commit"
    git push origin master
 
    testDir=$(dirname $PWD)
@@ -9,6 +13,8 @@ then
    labName=${PWD##*/}
    prefix="$typeName/$labName"
 
+   #subtree needs to be ran from the base git folder
+   cd ../.. 
    git subtree split -b $dirname -P $prefix
    git push origin lab1
 else
