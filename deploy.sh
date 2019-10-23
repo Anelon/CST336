@@ -18,7 +18,7 @@ then
    cd ../.. 
    git subtree split -b "$dirname" --prefix="$prefix"
    #git subtree split -b lab1 --prefix="labs/lab1/"
-   git push origin "$dirname"
+   git push origin $dirname
 else
    echo "Please enter a commit message"
 fi
