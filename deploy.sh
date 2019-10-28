@@ -4,7 +4,7 @@ read -p 'Commit message: ' commit
 #echo $commit
 if [ ! -z "$commit" ]
 then
-   git add "/Volumes/HDD/Programing/CSUMB/CST336/classGit/."
+   git add "../../."
    git commit -m "$commit"
    git push origin master
 
