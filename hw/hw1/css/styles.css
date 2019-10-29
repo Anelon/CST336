@@ -22,6 +22,9 @@ nav a:hover {
     font-size: 1.8em;
     transition: .9s;
 }
+.active {
+    color: gray;
+}
 main {
     display: flex;
     justify-content: center;
