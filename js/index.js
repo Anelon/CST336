@@ -20,15 +20,25 @@ const rightDownLeft = right | down | left | downAndLeft | downAndRight;
 const allRound = up | down | left | right | downAndLeft | downAndRight | upAndRight | upAndLeft;
 const dirs = [[1,0,right],[-1,0,left],[0,-1,up],[0,1,down],[1,1,downAndRight],[-1,1,downAndLeft],[1,-1,upAndRight],[-1,-1,upAndLeft]];
 
-const SIZE = 19;
 
+//Globals
+const SIZE = 19;
+let gameboard = $("gameBoard");
+let room = [];
+let player;
+let mobs = [];
+let pause = true;
+
+//array of walkable tiles
+const nonWalkable = ["wall","red","blue","green"];
 function isWalkable(i,j) {
-    if($(`#${i + "-" + j}`).attr('class').includes("wall")) return false;
-    if($(`#${i + "-" + j}`).attr('class').includes("red")) return false;
-    if($(`#${i + "-" + j}`).attr('class').includes("blue")) return false;
-    if($(`#${i + "-" + j}`).attr('class').includes("green")) return false;
+    for(const k in nonWalkable) { 
+        if($(`#${i + "-" + j}`).attr('class').includes(nonWalkable[k])) 
+            return false;
+    }
     return true;
 }
+
 
 class Mob {
     constructor(i,j,color) {
@@ -46,8 +56,6 @@ class Mob {
         this.active = true;
     }
 }
-
-let mobs = [];
 
 class Player {
     constructor(i,j) {
@@ -86,11 +94,6 @@ class Player {
         }
     }
 }
-
-let gameboard = $("gameBoard");
-let room = [];
-let player;
-let pause = true;
 
 
 //mainish
