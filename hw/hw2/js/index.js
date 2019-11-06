@@ -251,7 +251,7 @@ function playIntro() {
     $("info").show();
     $("infoTxt").html("");
     $("infoTxt").append("<p>You wake up and have in a state of alarm.</p>");
-    $("infoTxt").append("<p>You try and remember you name, what is it?</p>");
+    $("infoTxt").append("<p>You try and remember your name, what is it?</p>");
     $("infoTxt").append('<input text="text" id="name">');
 }
 function init() {
