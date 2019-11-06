@@ -19,7 +19,7 @@ gameBoard {
     transform: translate(-50%, -50%);
 }
 info {
-    width: 30vh;
+    width: 50vh;
     background-color: gray;
     position:absolute;
     left: 50%;
@@ -38,7 +38,13 @@ info {
 .player {
     background-image: url("../img/player.png");
 }
-.red {
+.chestClosed {
+    background-image: url("../img/chest/chest1.png");
+}
+.chestOpen {
+    background-image: url("../img/chest/chest6.png");
+}
+.redPilar {
     background-image: url("../img/pillarRed/pillar.png");
 }
 .redMob {
@@ -47,7 +53,7 @@ info {
 .redStone {
     background-image: url("../img/pillarRed/stone.png");
 }
-.green {
+.greenPilar {
     background-image: url("../img/pillarGreen/pillar.png");
 }
 .greenMob {
@@ -56,7 +62,7 @@ info {
 .greenStone {
     background-image: url("../img/pillarGreen/stone.png");
 }
-.blue {
+.bluePilar {
     background-image: url("../img/pillarBlue/pillar.png");
 }
 .blueMob {

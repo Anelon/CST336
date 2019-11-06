@@ -26,34 +26,52 @@ const SIZE = 19;
 let gameboard = $("gameBoard");
 let room = [];
 let player;
-let mobs = [];
+let mobs = {};
 let pause = true;
+let gameStage = 0;
+let playerName = "";
+const rememberTxt = ["Are you sure you don't remember?", 
+"Try a little Harder.", 
+"What letter did it start with?",
+"Now you are just playing dumb...",
+"You can't be that forgetfull can you?",
+"You are supposed to be typing in the box."]
+let nameTries = 0;
 
-//array of walkable tiles
-const nonWalkable = ["wall","red","blue","green"];
+//if the class only has tile it is walkble
 function isWalkable(i,j) {
-    for(const k in nonWalkable) { 
-        if($(`#${i + "-" + j}`).attr('class').includes(nonWalkable[k])) 
-            return false;
-    }
+    if($(`#${i + "-" + j}`).attr('class') != "tile") 
+        return false;
     return true;
 }
 
 
 class Mob {
-    constructor(i,j,color) {
+    static pilar = "Pilar";
+    static stone = "Stone";
+    static mob = "Mob";
+    constructor(i,j,color,type) {
         this.i = i;
         this.j = j;
         this.color = color;
-        this.class = color;
+        this.type = type;
+        this.class = color + type;
         this.active = false;
         $(`#${i + "-" + j}`).addClass(this.class);
+    }
+    getDesc() {
+        return this.color + " " + this.type;
     }
     activate() {
         $(`#${this.i + "-" + this.j}`).removeClass(this.class);
         this.class = this.color + "Mob";
         $(`#${this.i + "-" + this.j}`).addClass(this.class);
         this.active = true;
+        gameStage++;
+    }
+    removeSelf() {
+        $(`#${this.i + "-" + this.j}`).removeClass(this.class);
+        delete mobs[this.class]
     }
 }
 
@@ -63,6 +81,7 @@ class Player {
         this.i = i;
         this.j = j;
         this.facing = [-1,0];
+        this.inventory = {};
         $(`#${i + "-" + j}`).addClass("player");
     }
     move(y,x) {
@@ -79,41 +98,76 @@ class Player {
         this.i = i;
         this.j = j;
     }
+    pickup(mob) {
+        showPause(`You picked up a ${mobs[mob].getDesc()}.`);
+        this.inventory[mob] = mobs[mob];
+        mobs[mob].removeSelf();
+    }
     use() {
         let i = this.i + this.facing[0];
         let j = this.j + this.facing[1];
-        if($(`#${i + "-" + j}`).attr('class').includes("red")) {
-            console.log("Found red");
-            return false;
-        } if($(`#${i + "-" + j}`).attr('class').includes("blue")) {
-            console.log("Found blue");
-            return false;
-        } if($(`#${i + "-" + j}`).attr('class').includes("green")) {
-            console.log("Found green");
-            return false;
+        let target = $(`#${i + "-" + j}`).attr('class');
+        if(target.includes("redStone")) {
+            this.pickup("redStone");
+        } else if(target.includes("blueStone")) {
+            this.pickup("blueStone");
+        } else if(target.includes("greenStone")) {
+            this.pickup("greenStone");
+        } else if(target.includes("redPilar")) {
+            if(this.inventory["redStone"]) {
+                mobs["redPilar"].activate();
+            }
+        } else if(target.includes("bluePilar")) {
+            if(this.inventory["blueStone"]) {
+                mobs["bluePilar"].activate();
+            }
+        } else if(target.includes("greenPilar")) {
+            if(this.inventory["greenStone"]) {
+                mobs["greenPilar"].activate();
+            }
         }
     }
 }
-
 
 //mainish
 $(document).ready(function() {
     mapInit();
     init();
+    playIntro();
     $(document).keypress(function() {
         //console.log(event.key)
-        if(event.key == "w") player.move(-1, 0);
-        else if(event.key == "a") player.move(0, -1);
-        else if(event.key == "s") player.move(+1, 0);
-        else if(event.key == "d") player.move(0, +1);
-        else if(event.key == " ") player.use();
-        else if(event.key == "Enter") {
-            pause = !pause;
-            if(pause) {
-                $("info").show();
+        if(event.key == "Enter") {
+            if(gameStage == 0) {
+                if($("#name").val() != "") {
+                    gameStage++;
+                    playerName = $("#name").val().replace(/^\w/, c => c.toUpperCase());
+                    $("infoTxt").html(`<p>${playerName}, you feel compeled to awaken your fellow golems</p>`);
+                    $("infoTxt").append(`<p>"WASD" to move, "Space" to interact and "Enter" to pause</p>`);
+                } else {
+                    if(nameTries < rememberTxt.length) {
+                        $("infoTxt").append(`<p>${rememberTxt[nameTries++]}</p>`);
+                    }
+                }
             } else {
-                $("info").hide();
+                pause = !pause;
+                if(pause) {
+                    $("info").show();
+                    $("infoTxt").html(`<p>${playerName} nothing to see here, continue on your quest.</p>`);
+                } else {
+                    $("info").hide();
+                }
             }
+        }
+        else if(!pause) {
+            if(event.key == "w") player.move(-1, 0);
+            else if(event.key == "a") player.move(0, -1);
+            else if(event.key == "s") player.move(+1, 0);
+            else if(event.key == "d") player.move(0, +1);
+            else if(event.key == " ") player.use();
+        }
+        if(gameStage == 4) {
+            showPause("Congratulations you have awoken your friends!!!");
+            gameStage++;
         }
         
         //ai move?
@@ -185,6 +239,21 @@ function getAround(i,j) {
     return "C";//self.tileArr[1]
 }
 
+function showPause(message) {
+    pause = true;
+    $("info").show();
+    $("infoTxt").html("");
+    $("infoTxt").append(`<p>${message}</p>`);
+}
+function playIntro() {
+    gameStage = 0;
+    pause = true;
+    $("info").show();
+    $("infoTxt").html("");
+    $("infoTxt").append("<p>You wake up and have in a state of alarm.</p>");
+    $("infoTxt").append("<p>You try and remember you name, what is it?</p>");
+    $("infoTxt").append('<input text="text" id="name">');
+}
 function init() {
     for (let i = 0; i < 19; i++) {
         for (let j = 0; j < 19; j++) {
@@ -193,13 +262,22 @@ function init() {
                 let around = getAround(i,j);
                 tileClass += " wall" + around;
             }
-            gameboard.append(`<div id="${i}-${j}" class="tile ${tileClass}"></div>`);
+            gameboard.append(`<div id="${i}-${j}" class="tile${tileClass}"></div>`);
             if(room[i][j] == "B") {
-                mobs.push(new Mob(i,j,"blue"));
+                let temp = new Mob(i,j,"blue","Pilar");
+                mobs["bluePilar"] = temp;
             } else if(room[i][j] == "R") {
-                mobs.push(new Mob(i,j,"red"));
+                mobs["redPilar"] = new Mob(i,j,"red","Pilar");
             } else if(room[i][j] == "G") {
-                mobs.push(new Mob(i,j,"green"));
+                mobs["greenPilar"] = new Mob(i,j,"green","Pilar");
+            } else if(room[i][j] == "b") {
+                mobs["blueStone"] = new Mob(i,j,"blue","Stone");
+            } else if(room[i][j] == "r") {
+                mobs["redStone"] = new Mob(i,j,"red","Stone");
+            } else if(room[i][j] == "g") {
+                mobs["greenStone"] = new Mob(i,j,"green","Stone");
+            } else if(room[i][j] == "C") { //implement chests later
+                mobs[""] = new Mob(i,j,"chest","Closed");
             } else if(room[i][j] == "p") {
                 player = new Player(i,j);
             }
@@ -216,6 +294,7 @@ function mapInit() {
     room.push("wfffffffffffffffffw");
     room.push("wfffffffffffffffffw");
     room.push("wfffffffffffffffffw");
+    room.push("wgfffffffffffffffbw");
     room.push("wfffffffffffffffffw");
     room.push("wfffffffffffffffffw");
     room.push("wfffffffffffffffffw");
@@ -223,7 +302,6 @@ function mapInit() {
     room.push("wfffffffffffffffffw");
     room.push("wfffffffffffffffffw");
     room.push("wfffffffffffffffffw");
-    room.push("wfffffffffffffffffw");
-    room.push("wpfffffffffffffffGw");
+    room.push("wpfffffffrfffffffGw");
     room.push("wwwwwwwwwwwwwwwwwww");
 }
