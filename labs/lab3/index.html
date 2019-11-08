@@ -18,7 +18,8 @@
               Gender: <input type="radio" name="gender" value="m"> Male
               <input type="radio" name="gender" value="f"> Female <br><br>
 
-              Zip Code: <input type="text" name="zip" id="zip"><br>
+              Zip Code: <input type="text" name="zip" id="zip">
+              <br><span id="zipError"></span><br>
               City: <span id="city"></span><br>
               Latitude: <span id="latitude"></span><br>
               Longitude: <span id="longitude"></span><br><br>
@@ -30,11 +31,11 @@
            </div>
 
            <div class="side">
-              Desired Username: <input type="text" id="username" name="username">
+              Desired Username:<br><input type="text" id="username" name="username">
               <span id="usernameError"></span><br>
-              Password: <input type="password" id="password" name="password">
+              Password:<br><input type="password" id="password" name="password">
               <span id="passwordError"></span><br>
-              Password Again: <input type="password" id="password" name="password2"><br>
+              Password Again:<br><input type="password" id="password" name="password2"><br>
 
               <br><br>
               <input type="submit" value="Sign Up!">
@@ -140,10 +141,15 @@ $("#zip").on("change", function() {
       dataType: "json",
       data: { "zip": $("#zip").val()},
       success: function(result, status) {
-         //alert(result);
-         $("#city").html(result.city);
-         $("#latitude").html(result.latitude);
-         $("#longitude").html(result.longitude);
+         if(!result) {
+            console.log("failed");
+            $("#zipError").html("Zip code not found");
+         } else {
+            //alert(result);
+            $("#city").html(result.city);
+            $("#latitude").html(result.latitude);
+            $("#longitude").html(result.longitude);
+         }
       }
    });
 });
