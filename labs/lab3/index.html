@@ -5,11 +5,149 @@
         <title>Sign Up Page</title>
         <link href="css/styles.css" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Exo+2%7CLobster&display=swap" rel="stylesheet">
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src = "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js" ></script>
     </head>
     <body>
         <h1>Sign Up</h1>
+
+        <form id="signupForm" method="post" action="welcome.html">
+           <div class="side">
+              First name: <input type="text" name="fname"><br>
+              Last name: <input type="text" name="lname"><br>
+              Gender: <input type="radio" name="gender" value="m"> Male
+              <input type="radio" name="gender" value="f"> Female <br><br>
+
+              Zip Code: <input type="text" name="zip" id="zip"><br>
+              City: <span id="city"></span><br>
+              Latitude: <span id="latitude"></span><br>
+              Longitude: <span id="longitude"></span><br><br>
+              State: 
+              <select id="state" name="state">
+              </select><br>
+
+              Select a Country: <select id="country"></select><br><br>
+           </div>
+
+           <div class="side">
+              Desired Username: <input type="text" id="username" name="username">
+              <span id="usernameError"></span><br>
+              Password: <input type="password" id="password" name="password">
+              <span id="passwordError"></span><br>
+              Password Again: <input type="password" id="password" name="password2"><br>
+
+              <br><br>
+              <input type="submit" value="Sign Up!">
+           </div>
+        </form>
+
+        <script>
+           //verification variables 
+var usernameAvailable = false;
+
+$.ajax({
+   method: "GET",
+   url: "https://cst336.herokuapp.com/projects/api/state_abbrAPI.php",
+   success: function(result, status) {
+      //alert(result[0].county);
+      let resultArray = JSON.parse(result);
+      $("#state").append(`<option value="">Select One</option>`);
+      //better array foreach loop
+      resultArray.forEach(function(i) {
+         $("#state").append(`<option value="${i.usps}"> ${i.state} </option>`);
+      });
+      /*
+           for(let i = 0; i < result.length; i++) {
+              $("#country").append(`<option> ${result[i].county} </option>`);
+           }
+       */
+   }
+});
+function isFormValid() {
+   isValid = true;
+   if(!usernameAvailable) {
+      isValid = false;
+   }
+   if($("#username").val().length == 0) {
+      isValid = false;
+      $("#usernameError").html("Username Required");
+   }
+   if($("#password").val().length < 6) {
+      isValid = false;
+      $("#passwordError").html("Password must be at least 6 characters!");
+   }
+   if($("#password").val() != $("#password2").val()) {
+      isValid = false;
+      $("#passwordError").html("Password missmatch!");
+   }
+
+   return isValid;
+}
+
+
+$("#signupForm").on("submit", function(event) {
+   if(!isFormValid()) {
+      alert("submitting form");
+      event.preventDefault();
+   }
+});
+$("#username").on("change", function() {
+   $.ajax({
+      method: "GET",
+      url: "https://cst336.herokuapp.com/projects/api/usernamesAPI.php",
+      dataType: "json",
+      data: { "username": $("#username").val()},
+      success: function(result, status) {
+         if(result.available) {
+            $("#usernameError").html("Username is available!");
+            $("#usernameError").css("color","green");
+            usernameAvailable = true;
+         } else {
+            $("#usernameError").html("Username is not available!");
+            $("#usernameError").css("color","red");
+            usernameAvailable = false;
+         }
+      }
+   });
+});
+
+$("#state").on("change", function() {
+   $.ajax({
+      method: "GET",
+      url: "https://cst336.herokuapp.com/projects/api/countyListAPI.php",
+      dataType: "json",
+      data: { "state": $("#state").val()},
+      success: function(result, status) {
+         //alert(result[0].county);
+         $("#country").append(`<option>Select One</option>`);
+         //better array foreach loop
+         result.forEach(function(i) {
+            $("#country").append(`<option> ${i.county} </option>`);
+         });
+         /*
+           for(let i = 0; i < result.length; i++) {
+              $("#country").append(`<option> ${result[i].county} </option>`);
+           }
+          */
+      }
+   });
+});
+$("#zip").on("change", function() {
+   //alert($("#zip").val());
+   $.ajax({
+      method: "GET",
+      url: "https://cst336.herokuapp.com/projects/api/cityInfoAPI.php",
+      dataType: "json",
+      data: { "zip": $("#zip").val()},
+      success: function(result, status) {
+         //alert(result);
+         $("#city").html(result.city);
+         $("#latitude").html(result.latitude);
+         $("#longitude").html(result.longitude);
+      }
+   });
+});
+        </script>
+
     </body>
 </html>
