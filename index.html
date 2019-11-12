@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <title>Weather Boost Lookup</title>
+      <link href="css/styles.css" rel="stylesheet" type="text/css" />
+      <link href="https://fonts.googleapis.com/css?family=Exo+2%7CLobster&display=swap" rel="stylesheet">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src = "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js" ></script>
+   </head>
+   <body>
+      <h1>Weather Lookup</h1>
+      Search Location: <input type="text" name="zip" id="zip">
+      <br><span id="zipError"></span><br>
+
+      <main>
+         <div>
+            <h3>Location Info</h3>
+            City: <span id="city"></span><br>
+            Latitude: <span id="latitude"></span><br>
+            Longitude: <span id="longitude"></span><br>
+            State: <span id="state"></span><br>
+         </div>
+         <div>
+            <h3>Pokemon Info</h3>
+
+         </div>
+      </main>
+
+      <script>
+         //verification variables 
+$("#zip").on("change", function() {
+   //alert($("#zip").val());
+   $.ajax({
+      method: "GET",
+      url: "https://cst336.herokuapp.com/projects/api/cityInfoAPI.php",
+      dataType: "json",
+      data: { "zip": $("#zip").val()},
+      success: function(result, status) {
+         if(!result) {
+            console.log("failed");
+            $("#zipError").html("Zip code not found");
+         } else {
+            //alert(result);
+            $("#city").html(result.city);
+            $("#latitude").html(result.latitude);
+            $("#longitude").html(result.longitude);
+            $("#state").html(result.state);
+         }
+      }
+   });
+});
+      </script>
+
+   </body>
+</html>

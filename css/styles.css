@@ -1,0 +1,31 @@
+body {
+   background-color: black;
+   color: lightgray;
+   text-align: center;
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%,-50%);
+}
+header, main, nav, footer {
+   text-align: center;
+   font-family: 'Exo 2', sans-serif;
+}
+h1 {
+   font-family: 'Lobster', cursive;
+}
+main {
+   background-color: gray;
+   color: white;
+   display: flex;
+   justify-content: center;
+}
+.side {
+   margin: 50px;
+}
+footer {
+   display: flex;
+   justify-content: center;
+   font-size:.75em;
+   color: gray;
+}
