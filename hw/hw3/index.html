@@ -100,7 +100,7 @@ function changePokes(weatherType) {
    weatherTypes[weatherType].forEach(function(type) {
       let num = 1;
       $("#types").append(type + "<br>");
-      $("#pokemon").append(`<div><table id="${type}"></table><div>`);
+      $("#pokemon").append(`<div>${type}<table id="${type}"></table><div>`);
       $(`#${type}`).html(`<tr class="header"><td>Num</td><td>Name</td></tr>`);
       $.ajax({
          method: "GET",
