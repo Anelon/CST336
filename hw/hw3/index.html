@@ -20,17 +20,32 @@
             Latitude: <span id="latitude"></span><br>
             Longitude: <span id="longitude"></span><br>
             State: <span id="state"></span><br>
+            Temperature: <span id="temperature"></span><br>
+            Description: <span id="description"></span><br>
+            Boosted Types: <br><span id="types"></span>
          </div>
          <div>
             <h3>Pokemon Info</h3>
+            <div id="pokemon"></div>
 
          </div>
       </main>
 
       <script>
+
          //verification variables 
+const pokeAPI = "https://pokeapi.co/api/v2/";
+const OWMKey = "b1b571db8d88f4e47be9c2c647fbb616"
+const weatherAPI = `http://api.openweathermap.org/data/2.5/weather`;
+const weatherTypes = {
+   "Clear":	["grass","ground","fire"],
+   "Rain":	["water","electric","bug"],
+   "Windy":	["dragon","flying","psychic"],
+   "Snow":	["ice","steel"],
+   "Fog":	["dark","ghost"]
+};
 $("#zip").on("change", function() {
-   //alert($("#zip").val());
+   //get City info (old probably delete later
    $.ajax({
       method: "GET",
       url: "https://cst336.herokuapp.com/projects/api/cityInfoAPI.php",
@@ -49,7 +64,62 @@ $("#zip").on("change", function() {
          }
       }
    });
+   //get weather from api
+   $.ajax({
+      method: "GET",
+      url: weatherAPI,
+      dataType: "json",
+      data: { 
+         "zip": $("#zip").val(),
+         "APPID": OWMKey,
+         "units": "Imperial"
+      },
+      success: function(result, status) {
+         if(!result) {
+            console.log("failed");
+            $("#zipError").html("Zip code not found");
+         } else {
+            $("#temperature").html(result.main.temp);
+            let desc = "Clear";
+            if(result.wind.speed > 5) desc = "Windy";
+            else if (result.clouds.all > 75) desc = "Fog";
+            else if (result.rain) desc = "Rain";
+            else if (result.snow) desc = "Snow";
+            $("#description").html(desc);
+            //works for clear try with other weather types
+            changePokes(desc);
+         }
+      }
+   });
 });
+
+function changePokes(weatherType) {
+   //clear things
+   $("#pokemon").html("");
+   $("#types").html("");
+   weatherTypes[weatherType].forEach(function(type) {
+      let num = 1;
+      $("#types").append(type + "<br>");
+      $("#pokemon").append(`<div><table id="${type}"></table><div>`);
+      $(`#${type}`).html(`<tr class="header"><td>Num</td><td>Name</td></tr>`);
+      $.ajax({
+         method: "GET",
+         url: `${pokeAPI}type/${type}/`,
+         success: function(result, status) {
+            if(!result) {
+               console.log("failed");
+               $("#zipError").html("Zip code not found");
+            } else {
+               console.log(result.pokemon[1].pokemon.name);
+               for(let i = 0; i < 10; i++) { //shortened for convineice
+                  let poke = result.pokemon[i].pokemon.name;
+                  $(`#${type}`).append(`<tr><td>${num++}</td><td>${poke}</td></tr>`);
+               }
+            }
+         }
+      });
+   });
+}
       </script>
 
    </body>
