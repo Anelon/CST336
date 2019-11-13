@@ -4,8 +4,7 @@ body {
    text-align: center;
    position: absolute;
    left: 50%;
-   top: 50%;
-   transform: translate(-50%,-50%);
+   transform: translateX(-50%);
 }
 header, main, nav, footer {
    text-align: center;
@@ -28,4 +27,19 @@ footer {
    justify-content: center;
    font-size:.75em;
    color: gray;
+}
+#pokemon {
+   display: flex;
+   margin: 10px;
+   border: 2px;
+   border-style: solid;
+}
+div {
+   margin: 10px;
+   min-width: 60px;
+}
+table {
+   margin: 10px;
+   border: 2px;
+   border-style: solid;
 }
