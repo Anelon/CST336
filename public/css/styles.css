@@ -1,0 +1,64 @@
+body {
+    background-color: black;
+    color: lightgray;
+}
+header, main, nav, footer {
+    text-align: center;
+    font-family: 'Exo 2', sans-serif;
+}
+h1 {
+    font-family: 'Lobster', cursive;
+}
+nav a {
+    font-family: 'Lobster', cursive;
+    padding: 15px;
+    padding-bottom: 4px;
+    font-size: 2em;
+    text-decoration: none;
+    color: white;
+}
+nav a:hover {
+    border-bottom: 2px #af00ff solid;
+    transition: .9s;
+}
+.active {
+    border-bottom: 2px #af00ff solid;
+    transition: .9s;
+}
+main {
+    display: flex;
+    justify-content: center;
+}
+footer {
+    display: flex;
+    justify-content: center;
+    font-size:.75em;
+    color: gray;
+}
+.content {
+    margin: 0px auto;
+}
+table {
+    margin: 0px auto;
+}
+td {
+    padding-right: 10px;
+    font-size: 1.3em;
+}
+td strong {
+    color: #af00ff;
+}
+#table-header {
+    background-color: #351a00;
+}
+.table-row {
+    background-color: #753900;
+}
+ul {
+    width: 500px;
+    margin: 0 auto;
+    text-align: left;
+}
+.hobby {
+    color: #af00ff;
+}
