@@ -1,14 +1,16 @@
 <% include partials/header.ejs %>
-<style>
-      body {
-            background-image: url(<%= imgUrl%>);
-      }
-</style>
 
-<h1>Image Search</h1>
 <form action="/search">
       <input type="text" placeholder="Type Keyword" name="keyword"><br><br>
       <button>Search</button>
 </form>
+
+<% imgUrls.forEach(function(imgUrl, i) { %>
+
+      <%- ((i%3 == 0))?'<br>':'' %>
+      <img src='<%= imgUrl%>' height='200'>
+      <img class='fav' src='img/fav_off.png' width='20'>
+      
+<% });%>
 
 <% include partials/footer.ejs %>
