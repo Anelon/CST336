@@ -7,14 +7,14 @@ app.set('view engine', 'ejs');
 app.use(express.static("public"));
 
 app.set('port',  process.env.PORT || "8080");
-app.set('ip',  process.env.IP || "127.0.0.1");
+app.set('ip',  process.env.IP || "0.0.0.0");
 
 
 
 //routes
 app.get("/", async function(req, res) {
     var imgUrls = await tools.getRandomImages();
-    console.log(imgUrls);
+    //console.log(imgUrls);
     res.render("index", {"imgUrl":imgUrls[0]});
 });
 
