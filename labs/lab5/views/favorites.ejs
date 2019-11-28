@@ -1,0 +1,13 @@
+<% include partials/header.ejs %>
+
+<a href="/">Back to Search</a>
+<h1>Favorite Pictures</h1>
+
+<% rows.forEach(function(row, i) { %>
+      <a class="keywordlink"><%= row['keyword'] %></a>
+<% });%>
+<hr>
+<favorites>
+</favorites>
+
+<% include partials/footer.ejs %>
