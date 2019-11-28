@@ -2,6 +2,7 @@ let baseURL = "https://api.unsplash.com/";
 let randURL = "photos/random/?";
 let clientId = "client_id=2916cdfc5b3b7719814c0fdc8b5f5e6421f8c92ea5dff1a1405dab04a023a07c"
 const request = require("request");
+const mysql = require("mysql");
     
 module.exports = {
     getRandomImages: function (keyword="", imgCount=1) {
@@ -40,6 +41,16 @@ module.exports = {
             } else {
                 console.log("error: there was an error searching for imgs");
             }
+        });
+    }
+    ,
+    getConnection: function() {
+        return mysql.createConnection({
+            host: "a07yd3a6okcidwap.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
+            port: "3306",
+            user: "yu4q9qeq4ztff852",
+            password: "b0i1cmwccmij1zva",
+            database: "iulijvv5d0p0h2l3"
         });
     }
 }
