@@ -129,7 +129,7 @@ class Player {
     }
 }
 
-//mainish
+//<--- mainish --->
 $(document).ready(function() {
     mapInit();
     init();
