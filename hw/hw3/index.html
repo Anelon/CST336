@@ -19,20 +19,14 @@
             City: <span id="city"></span><br>
             Latitude: <span id="latitude"></span><br>
             Longitude: <span id="longitude"></span><br>
-            State: <span id="state"></span><br>
             Temperature: <span id="temperature"></span><br>
             Description: <span id="description"></span><br>
             Boosted Types: <br><span id="types"></span>
          </div>
          <div>
             <h3>Pokemon Info</h3>
-            <table>
-               <tr id="table-header">
-                 <td><strong>Name</strong></td>
-                 <td><strong>Number</strong></td>
-                 <td><strong>Types</strong></td>
-               </tr>
-            </table>
+            <div id="pokemon"></div>
+
 
          </div>
       </main>
@@ -51,25 +45,6 @@ const weatherTypes = {
    "Fog":	["dark","ghost"]
 };
 $("#zip").on("change", function() {
-   //get City info (old probably delete later
-   $.ajax({
-      method: "GET",
-      url: "https://cst336.herokuapp.com/projects/api/cityInfoAPI.php",
-      dataType: "json",
-      data: { "zip": $("#zip").val()},
-      success: function(result, status) {
-         if(!result) {
-            console.log("failed");
-            $("#zipError").html("Zip code not found");
-         } else {
-            alert(result);
-            $("#city").html(result.city);
-            $("#latitude").html(result.latitude);
-            $("#longitude").html(result.longitude);
-            $("#state").html(result.state);
-         }
-      }
-   });
    //get weather from api
    $.ajax({
       method: "GET",
@@ -85,6 +60,10 @@ $("#zip").on("change", function() {
             console.log("failed");
             $("#zipError").html("Zip code not found");
          } else {
+            console.log(result);
+            $("#city").html(result.name);
+            $("#latitude").html(result.coord.lat);
+            $("#longitude").html(result.coord.lon);
             $("#temperature").html(result.main.temp);
             let desc = "Clear";
             if(result.wind.speed > 5) desc = "Windy";
