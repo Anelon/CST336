@@ -62,7 +62,7 @@ $("#zip").on("change", function() {
             console.log("failed");
             $("#zipError").html("Zip code not found");
          } else {
-            //alert(result);
+            alert(result);
             $("#city").html(result.city);
             $("#latitude").html(result.latitude);
             $("#longitude").html(result.longitude);
